@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import protocolsupportpocketstuff.event.listeners.ConnectionListener;
 import protocolsupportpocketstuff.event.listeners.SkinListener;
 
 public class ProtocolSupportPocketStuff extends JavaPlugin {
@@ -20,6 +21,7 @@ public class ProtocolSupportPocketStuff extends JavaPlugin {
 	public void onEnable() {
 		ProtocolSupportPocketStuff.INSTANCE = this;
 		getServer().getPluginManager().registerEvents(new SkinListener(this), this);
+		getServer().getPluginManager().registerEvents(new ConnectionListener(this), this);
 		Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_PURPLE + "Hello World!" + ChatColor.RESET);
 	}
 	
