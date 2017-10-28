@@ -13,6 +13,7 @@ import protocolsupportpocketstuff.api.PocketStuffAPI;
 import protocolsupportpocketstuff.api.util.PocketCon;
 import protocolsupportpocketstuff.commands.CommandHandler;
 import protocolsupportpocketstuff.hacks.dimensions.DimensionListener;
+import protocolsupportpocketstuff.hacks.teams.TeamsPacketListener;
 import protocolsupportpocketstuff.packet.handshake.ClientLoginPacket;
 import protocolsupportpocketstuff.packet.play.ModalResponsePacket;
 import protocolsupportpocketstuff.packet.play.SkinPacket;
@@ -77,6 +78,7 @@ public class ProtocolSupportPocketStuff extends JavaPlugin implements Listener {
 			// = Packet Listeners = \\
 			con.addPacketListener(new ModalResponsePacket().new decodeHandler(this, con));
 			con.addPacketListener(new ResourcePackListener(this, con));
+			con.addPacketListener(new TeamsPacketListener(this, con));
 			if(getConfig().getBoolean("skins.PEtoPC")) { con.addPacketListener(new SkinPacket().new decodeHandler(this, con)); }
 			
 		}
