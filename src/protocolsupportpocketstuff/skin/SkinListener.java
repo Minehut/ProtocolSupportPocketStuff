@@ -1,9 +1,12 @@
 package protocolsupportpocketstuff.skin;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import protocolsupport.api.Connection;
 import protocolsupport.api.events.PlayerPropertiesResolveEvent;
 import protocolsupportpocketstuff.ProtocolSupportPocketStuff;
@@ -17,6 +20,7 @@ import protocolsupportpocketstuff.api.modals.elements.ModalImage;
 import protocolsupportpocketstuff.api.modals.elements.ModalImage.ModalImageType;
 import protocolsupportpocketstuff.api.modals.elements.simple.ModalButton;
 import protocolsupportpocketstuff.api.util.PocketCon;
+import protocolsupportpocketstuff.api.util.PocketUtils;
 import protocolsupportpocketstuff.api.util.SkinUtils;
 
 public class SkinListener implements Listener {
@@ -52,6 +56,20 @@ public class SkinListener implements Listener {
 							.addButton(new ModalButton("Magbot").setImage(new ModalImage(ModalImageType.EXTERNAL_IMAGE, "http://magbot.nl/img/MagBot.png")))
 							.addButton(new ModalButton("Awesome").setImage(new ModalImage(ModalImageType.EXTERNAL_IMAGE, "http://yumamom.com/wp-content/uploads/2015/05/LEGO.jpg"))));
 			}
+		}
+		if(e.getMessage().contains(".spawn")) {
+			new BukkitRunnable() {
+				public void run() {
+					Entity entity = e.getPlayer().getWorld().spawnEntity(e.getPlayer().getLocation(), EntityType.PIG);
+					e.getPlayer().sendMessage("this is your good old pig");
+					new BukkitRunnable() {
+						public void run() {
+							PocketUtils.setScale(entity, 4);
+							e.getPlayer().sendMessage("§c§eNOW HE IS BIG, BOI!!! §7§n(actually just 4x)");
+						}
+					}.runTaskLater(plugin, 60L);
+				}
+			}.runTask(plugin);
 		}
 	}
 	

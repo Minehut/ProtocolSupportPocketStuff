@@ -21,6 +21,7 @@ import protocolsupportpocketstuff.resourcepacks.ResourcePackManager;
 import protocolsupportpocketstuff.skin.PcToPeProvider;
 import protocolsupportpocketstuff.skin.SkinListener;
 import protocolsupportpocketstuff.storage.Skins;
+import protocolsupportpocketstuff.util.EntitySpawnListener;
 import protocolsupportpocketstuff.util.ResourcePackListener;
 
 import java.io.File;
@@ -79,6 +80,7 @@ public class ProtocolSupportPocketStuff extends JavaPlugin implements Listener {
 			con.addPacketListener(new ModalResponsePacket().new decodeHandler(this, con));
 			con.addPacketListener(new ResourcePackListener(this, con));
 			con.addPacketListener(new TeamsPacketListener(this, con));
+			con.addPacketListener(new EntitySpawnListener(this, con));
 			if(getConfig().getBoolean("skins.PEtoPC")) { con.addPacketListener(new SkinPacket().new decodeHandler(this, con)); }
 			
 		}

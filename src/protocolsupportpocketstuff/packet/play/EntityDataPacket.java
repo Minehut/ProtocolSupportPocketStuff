@@ -22,7 +22,7 @@ public class EntityDataPacket extends PEPacket {
 
 	@Override
 	public int getPacketId() {
-		return PEPacketIDs.RESOURCE_DATA;
+		return PEPacketIDs.SET_ENTITY_DATA;
 	}
 
 	@Override
