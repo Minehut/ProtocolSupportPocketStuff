@@ -44,6 +44,9 @@ public class ProtocolSupportPocketStuff extends JavaPlugin implements Listener {
 		// = Config = \\
 		saveDefaultConfig();
 
+		// = Cache = \\
+		Skins.INSTANCE.buildCache(getConfig().getInt("skins.cache-size"), getConfig().getInt("skins.cache-rate"));
+
 		new File(this.getDataFolder(), ResourcePackManager.FOLDER_NAME + "/").mkdirs();
 
 		ResourcePackManager resourcePackManager = new ResourcePackManager(this);
@@ -60,9 +63,6 @@ public class ProtocolSupportPocketStuff extends JavaPlugin implements Listener {
 		if(getConfig().getBoolean("skins.PCtoPE")) { PESkinsProviderSPI.setProvider(new PcToPeProvider(this)); }
 		PEMetaProviderSPI.setProvider(new MetadataProvider());
 
-		// = Cache = \\
-		Skins.INSTANCE.buildCache(getConfig().getInt("skins.cache-size"), getConfig().getInt("skins.cache-rate"));
-		
 		pm("Hello world! :D");
 	}
 

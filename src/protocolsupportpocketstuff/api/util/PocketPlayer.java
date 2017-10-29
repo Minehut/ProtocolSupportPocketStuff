@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import protocolsupport.api.Connection;
 import protocolsupport.api.ProtocolSupportAPI;
 import protocolsupport.api.ProtocolType;
 import protocolsupportpocketstuff.api.modals.Modal;
@@ -126,7 +127,11 @@ public class PocketPlayer {
 	public static void sendDimensionChange(Player player, Environment environment, Vector location) {
 		PocketCon.sendDimensionChange(ProtocolSupportAPI.getConnection(player), environment, location);
 	}
-	
+
+	public static void transfer(Player player, String address, short port) {
+		PocketCon.transfer(ProtocolSupportAPI.getConnection(player), address, port);
+	}
+
 	/***
 	 * Sends a packet to pocket.
 	 * <br/><br/>
