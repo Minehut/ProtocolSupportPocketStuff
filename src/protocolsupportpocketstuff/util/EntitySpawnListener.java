@@ -8,21 +8,9 @@ import protocolsupport.protocol.serializer.MiscSerializer;
 import protocolsupport.protocol.serializer.StringSerializer;
 import protocolsupport.protocol.serializer.VarNumberSerializer;
 import protocolsupport.protocol.typeremapper.pe.PEPacketIDs;
-import protocolsupport.protocol.utils.datawatcher.DataWatcherObject;
-import protocolsupport.protocol.utils.datawatcher.objects.DataWatcherObjectByte;
-import protocolsupport.protocol.utils.datawatcher.objects.DataWatcherObjectFloatLe;
-import protocolsupport.protocol.utils.datawatcher.objects.DataWatcherObjectItemStack;
-import protocolsupport.protocol.utils.datawatcher.objects.DataWatcherObjectSVarInt;
-import protocolsupport.protocol.utils.datawatcher.objects.DataWatcherObjectSVarLong;
-import protocolsupport.protocol.utils.datawatcher.objects.DataWatcherObjectShortLe;
-import protocolsupport.protocol.utils.datawatcher.objects.DataWatcherObjectString;
-import protocolsupport.protocol.utils.datawatcher.objects.DataWatcherObjectVector3fLe;
-import protocolsupport.protocol.utils.datawatcher.objects.DataWatcherObjectVector3vi;
-import protocolsupport.protocol.utils.i18n.I18NData;
 import protocolsupportpocketstuff.ProtocolSupportPocketStuff;
 import protocolsupportpocketstuff.api.util.PocketUtils;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 public class EntitySpawnListener extends Connection.PacketListener {
@@ -70,7 +58,7 @@ public class EntitySpawnListener extends Connection.PacketListener {
 			MiscSerializer.writeUUID(serializer, uuid);
 			StringSerializer.writeString(serializer, ProtocolVersion.MINECRAFT_PE, name);
 		}
-		VarNumberSerializer.writeSVarLong(serializer, (long) entityId);
+		VarNumberSerializer.writeSVarLong(serializer, entityId);
 		VarNumberSerializer.writeVarLong(serializer, VarNumberSerializer.readVarLong(data)); // runtime ID
 
 		if (packetId == PEPacketIDs.SPAWN_ENTITY) {
@@ -88,8 +76,9 @@ public class EntitySpawnListener extends Connection.PacketListener {
 			MiscSerializer.writeLFloat(serializer, MiscSerializer.readLFloat(serializer)); // yaw
 			VarNumberSerializer.writeSVarInt(serializer, VarNumberSerializer.readSVarInt(serializer)); // slot
 		}
+		// TODO: Metadata
 		// now comes the cool stuff:tm:
-		int entries = VarNumberSerializer.readVarInt(serializer);
+		/* int entries = VarNumberSerializer.readVarInt(serializer);
 		VarNumberSerializer.writeVarInt(serializer, entries); // current metadata + scale
 
 		HashMap<Integer, DataWatcherObject> dataWatchers =  new HashMap<Integer, DataWatcherObject>();
@@ -108,12 +97,9 @@ public class EntitySpawnListener extends Connection.PacketListener {
 			DataWatcherObject dw = dataWatchers.get(metaType);
 			dw.readFromStream(data, ProtocolVersion.MINECRAFT_PE, I18NData.DEFAULT_LOCALE);
 			dw.writeToStream(serializer, ProtocolVersion.MINECRAFT_PE, I18NData.DEFAULT_LOCALE);
-		}
-
+		} */
 		// and fuck the rest
-		for (byte b : MiscSerializer.readBytes(data, data.readableBytes() - data.readerIndex())) {
-			serializer.writeByte(b);
-		}
+		serializer.writeBytes(MiscSerializer.readBytes(data, data.readableBytes() - data.readerIndex()));
 		event.setData(serializer);
 	}
 }

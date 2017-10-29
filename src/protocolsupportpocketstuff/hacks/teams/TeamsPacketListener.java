@@ -124,7 +124,7 @@ public class TeamsPacketListener extends Connection.PacketListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		throw new RuntimeException("Something went wrong!");
+		throw new RuntimeException("Error while getting field \"" + fieldName + "\" from " + source + "!");
 	}
 
 	public static int getInt(Object source, String fieldName) {
@@ -135,7 +135,7 @@ public class TeamsPacketListener extends Connection.PacketListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		throw new RuntimeException("Something went wrong!");
+		throw new RuntimeException("Error while getting field \"" + fieldName + "\" from " + source + "!");
 	}
 
 	static class CachedUser {

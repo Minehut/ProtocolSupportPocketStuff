@@ -1,7 +1,12 @@
 package protocolsupportpocketstuff.skin;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import net.minecraft.server.v1_12_R1.EntityHuman;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,6 +28,9 @@ import protocolsupportpocketstuff.api.util.PocketCon;
 import protocolsupportpocketstuff.api.util.PocketUtils;
 import protocolsupportpocketstuff.api.util.SkinUtils;
 
+import java.lang.reflect.Field;
+import java.util.Map;
+
 public class SkinListener implements Listener {
 	
 	private ProtocolSupportPocketStuff plugin;
@@ -31,13 +39,17 @@ public class SkinListener implements Listener {
 		this.plugin = plugin;
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerPropertiesResolve(PlayerPropertiesResolveEvent e) {
 		Connection con = e.getConnection();
 		if (PocketCon.isPocketConnection(con)) {
 			if (con.hasMetadata("applySkinOnJoin")) {
 				plugin.debug("Applying cached skin for " + e.getConnection() + "...");
 				SkinUtils.SkinDataWrapper skinDataWrapper = (SkinUtils.SkinDataWrapper) con.getMetadata("applySkinOnJoin");
+				e.addProperty(new PlayerPropertiesResolveEvent.ProfileProperty("textures", skinDataWrapper.getValue(), skinDataWrapper.getSignature()));
+				e.addProperty(new PlayerPropertiesResolveEvent.ProfileProperty("ignore_me", "wow"));
+				e.addProperty(new PlayerPropertiesResolveEvent.ProfileProperty("textures", skinDataWrapper.getValue(), skinDataWrapper.getSignature()));
+				e.addProperty(new PlayerPropertiesResolveEvent.ProfileProperty("textures", skinDataWrapper.getValue(), skinDataWrapper.getSignature()));
 				e.addProperty(new PlayerPropertiesResolveEvent.ProfileProperty("textures", skinDataWrapper.getValue(), skinDataWrapper.getSignature()));
 				con.removeMetadata("applySkinOnJoin");
 			}
@@ -65,11 +77,29 @@ public class SkinListener implements Listener {
 					new BukkitRunnable() {
 						public void run() {
 							PocketUtils.setScale(entity, 4);
-							e.getPlayer().sendMessage("§c§eNOW HE IS BIG, BOI!!! §7§n(actually just 4x)");
+							e.getPlayer().sendMessage("§c§eNOW HE IS A BIG BOI!!! §7§n(actually just 4x)");
 						}
 					}.runTaskLater(plugin, 60L);
 				}
 			}.runTask(plugin);
+		}
+		if(e.getMessage().contains(".checkskin")) {
+			Player player = e.getPlayer();
+			CraftPlayer craftPlayer = ((CraftPlayer) player);
+			EntityHuman entityHuman = craftPlayer.getHandle();
+
+			try {
+				Field gp2 = entityHuman.getClass().getSuperclass().getDeclaredField("g");
+				gp2.setAccessible(true);
+				GameProfile profile = (GameProfile) gp2.get(entityHuman);
+				System.out.println("Properties of " + profile + ":");
+				for (Map.Entry<String, Property> prop : profile.getProperties().entries()) {
+					System.out.println(prop.getKey() + " ~ " + prop.getValue());
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return;
+			}
 		}
 	}
 	

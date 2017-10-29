@@ -2,7 +2,6 @@ package protocolsupportpocketstuff.packet.play;
 
 import io.netty.buffer.ByteBuf;
 import protocolsupport.api.Connection;
-import protocolsupport.api.ProtocolVersion;
 import protocolsupport.protocol.packet.middleimpl.clientbound.play.v_pe.EntityMetadata;
 import protocolsupport.protocol.serializer.VarNumberSerializer;
 import protocolsupport.protocol.typeremapper.pe.PEPacketIDs;
@@ -28,7 +27,7 @@ public class EntityDataPacket extends PEPacket {
 	@Override
 	public void toData(Connection connection, ByteBuf serializer) {
 		VarNumberSerializer.writeVarLong(serializer, entityId);
-		EntityMetadata.encodeMeta(serializer, ProtocolVersion.MINECRAFT_PE, I18NData.DEFAULT_LOCALE, metadata);
+		EntityMetadata.encodeMeta(serializer, connection.getVersion(), I18NData.DEFAULT_LOCALE, metadata);
 	}
 
 	@Override
