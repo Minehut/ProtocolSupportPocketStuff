@@ -8,12 +8,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import protocolsupport.api.Connection;
 import protocolsupport.api.events.ConnectionHandshakeEvent;
 import protocolsupport.api.events.ConnectionOpenEvent;
+import protocolsupport.api.unsafe.pemetadata.PEMetaProviderSPI;
 import protocolsupport.api.unsafe.peskins.PESkinsProviderSPI;
 import protocolsupportpocketstuff.api.PocketStuffAPI;
 import protocolsupportpocketstuff.api.util.PocketCon;
 import protocolsupportpocketstuff.commands.CommandHandler;
 import protocolsupportpocketstuff.hacks.dimensions.DimensionListener;
 import protocolsupportpocketstuff.hacks.teams.TeamsPacketListener;
+import protocolsupportpocketstuff.metadata.MetadataProvider;
 import protocolsupportpocketstuff.packet.handshake.ClientLoginPacket;
 import protocolsupportpocketstuff.packet.play.ModalResponsePacket;
 import protocolsupportpocketstuff.packet.play.SkinPacket;
@@ -21,7 +23,6 @@ import protocolsupportpocketstuff.resourcepacks.ResourcePackManager;
 import protocolsupportpocketstuff.skin.PcToPeProvider;
 import protocolsupportpocketstuff.skin.SkinListener;
 import protocolsupportpocketstuff.storage.Skins;
-import protocolsupportpocketstuff.util.EntitySpawnListener;
 import protocolsupportpocketstuff.util.ResourcePackListener;
 
 import java.io.File;
@@ -57,7 +58,8 @@ public class ProtocolSupportPocketStuff extends JavaPlugin implements Listener {
 		
 		// = SPI = \\
 		if(getConfig().getBoolean("skins.PCtoPE")) { PESkinsProviderSPI.setProvider(new PcToPeProvider(this)); }
-		
+		PEMetaProviderSPI.setProvider(new MetadataProvider());
+
 		// = Cache = \\
 		Skins.INSTANCE.buildCache(getConfig().getInt("skins.cache-size"), getConfig().getInt("skins.cache-rate"));
 		
@@ -80,7 +82,6 @@ public class ProtocolSupportPocketStuff extends JavaPlugin implements Listener {
 			con.addPacketListener(new ModalResponsePacket().new decodeHandler(this, con));
 			con.addPacketListener(new ResourcePackListener(this, con));
 			con.addPacketListener(new TeamsPacketListener(this, con));
-			con.addPacketListener(new EntitySpawnListener(this, con));
 			if(getConfig().getBoolean("skins.PEtoPC")) { con.addPacketListener(new SkinPacket().new decodeHandler(this, con)); }
 			
 		}
