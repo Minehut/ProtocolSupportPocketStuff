@@ -20,11 +20,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class ClientLoginPacket extends PEPacket {
 	int protocolVersion;
-	String serverAddress;
 	JsonObject clientPayload;
 
 	public ClientLoginPacket() { }
@@ -93,10 +93,16 @@ public class ClientLoginPacket extends PEPacket {
 		@Override
 		public void handle() {
 			ClientLoginPacket clientLoginPacket = ClientLoginPacket.this;
+			JsonObject clientPayload = clientLoginPacket.clientPayload;
 
-			clientLoginPacket.serverAddress = clientLoginPacket.clientPayload.get("ServerAddress").getAsString();
+			HashMap<String, Object> clientInfo = new HashMap<>();
+			clientInfo.put("ClientRandomId", clientPayload.get("ClientRandomId").getAsLong());
+			clientInfo.put("DeviceModel", clientPayload.get("DeviceModel").getAsString());
+			clientInfo.put("DeviceOS", clientPayload.get("DeviceOS").getAsInt());
+			clientInfo.put("GameVersion", clientPayload.get("GameVersion").getAsString());
+			connection.addMetadata(StuffUtils.CLIENT_INFO_KEY, clientInfo);
 
-			String skinData = clientLoginPacket.clientPayload.get("SkinData").getAsString();
+			String skinData = clientPayload.get("SkinData").getAsString();
 			String uniqueSkinId = UUID.nameUUIDFromBytes(skinData.getBytes()).toString();
 
 			if (Skins.INSTANCE.hasPcSkin(uniqueSkinId)) {
