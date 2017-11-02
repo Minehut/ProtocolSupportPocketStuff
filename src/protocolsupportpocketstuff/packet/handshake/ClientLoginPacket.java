@@ -102,6 +102,8 @@ public class ClientLoginPacket extends PEPacket {
 			clientInfo.put("GameVersion", clientPayload.get("GameVersion").getAsString());
 			connection.addMetadata(StuffUtils.CLIENT_INFO_KEY, clientInfo);
 
+			connection.addMetadata(StuffUtils.JOIN_HOST_NAME, clientPayload.get("ServerAddress"));
+
 			String skinData = clientPayload.get("SkinData").getAsString();
 			String uniqueSkinId = UUID.nameUUIDFromBytes(skinData.getBytes()).toString();
 
